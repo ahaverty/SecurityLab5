@@ -1,7 +1,9 @@
 package ie.dit.comp.c12410858.security.calculator;
 
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 
 public class PsuedoRandomUtility {
 
@@ -18,6 +20,14 @@ public class PsuedoRandomUtility {
 		long generatedNumber = secureRandom.nextLong() & 0xffffffffL;
 		
 		return generatedNumber;
+	}
+	
+	public static long generateNumberUsingBlumBlumShub() {
+		BigInteger generatedNumber = BlumBlumShub.generateN(32, new Random());
+		BlumBlumShub bbs = new BlumBlumShub(generatedNumber);
+		//bbs.next(numBits)
+		//TODO!
+		return generatedNumber.longValue();
 	}
 	
 	/**
