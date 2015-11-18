@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.border.BevelBorder;
@@ -16,20 +17,22 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.BoxLayout;
+import java.awt.Component;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 public class CryptoApplication {
 
 	private static String appTitle = "Lab 5 Number Generator";
+	private String generatePreMessage = "Generate list";
+	private String generateDuringMessage = "Generating list...";
 
 	private JFrame frame;
 	private JTextField numberOutput1;
@@ -40,7 +43,8 @@ public class CryptoApplication {
 	private JTextField textFieldNextPrimeOutput;
 	private JButton btnGenerateNumber1;
 	private JButton btnGenerateNumber2;
-	private JLabel lblPrimeError;
+	JButton btnGenerateList;
+	private JList<Long> list;
 
 	/**
 	 * Launch the application.
@@ -76,24 +80,22 @@ public class CryptoApplication {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 582, 559);
+		frame.setBounds(100, 100, 649, 572);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel);
-		FlowLayout fl_panel = new FlowLayout(FlowLayout.LEFT);
-		panel.setLayout(fl_panel);
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
 		JLabel lblHeader1 = DefaultComponentFactory.getInstance().createTitle("Number Generators & Prime Tester");
+		lblHeader1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblHeader1.setHorizontalAlignment(SwingConstants.LEFT);
+		frame.getContentPane().add(lblHeader1);
 		lblHeader1.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblHeader1.setForeground(Color.DARK_GRAY);
-		panel.add(lblHeader1);
 
 		JPanel panelGenerate1 = new JPanel();
-		panel.add(panelGenerate1);
+		frame.getContentPane().add(panelGenerate1);
 
 		JLabel algorithmLabel1 = new JLabel("Mersenne Twister");
+		algorithmLabel1.setHorizontalAlignment(SwingConstants.CENTER);
 
 		btnGenerateNumber1 = new JButton("Generate number");
 		btnGenerateNumber1.addActionListener(new ActionListener() {
@@ -107,12 +109,13 @@ public class CryptoApplication {
 		numberOutput1.setColumns(15);
 
 		JLabel lblPrime = new JLabel("Prime:");
+		lblPrime.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		textPrime1 = new JTextField();
 		textPrime1.setEditable(false);
 		textPrime1.setText("");
 		textPrime1.setColumns(10);
-		panelGenerate1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panelGenerate1.setLayout(new GridLayout(0, 5, 0, 0));
 		panelGenerate1.add(algorithmLabel1);
 		panelGenerate1.add(btnGenerateNumber1);
 		panelGenerate1.add(numberOutput1);
@@ -120,10 +123,11 @@ public class CryptoApplication {
 		panelGenerate1.add(textPrime1);
 
 		JPanel panelGenerate2 = new JPanel();
-		panel.add(panelGenerate2);
-		panelGenerate2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		frame.getContentPane().add(panelGenerate2);
+		panelGenerate2.setLayout(new GridLayout(0, 5, 0, 0));
 
 		JLabel algorithmLabel2 = new JLabel("Blum Blum Shub");
+		algorithmLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		panelGenerate2.add(algorithmLabel2);
 
 		btnGenerateNumber2 = new JButton("Generate number");
@@ -140,6 +144,7 @@ public class CryptoApplication {
 		panelGenerate2.add(numberOutput2);
 
 		JLabel label_1 = new JLabel("Prime:");
+		label_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelGenerate2.add(label_1);
 
 		textPrime2 = new JTextField();
@@ -149,38 +154,66 @@ public class CryptoApplication {
 		panelGenerate2.add(textPrime2);
 
 		JLabel lblHeader2 = DefaultComponentFactory.getInstance().createTitle("Large Prime Number List Generator");
+		lblHeader2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(lblHeader2);
 		lblHeader2.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblHeader2.setForeground(Color.DARK_GRAY);
-		panel.add(lblHeader2);
 
 		JPanel panelList = new JPanel();
-		panel.add(panelList);
+		frame.getContentPane().add(panelList);
+		panelList.setLayout(new BoxLayout(panelList, BoxLayout.X_AXIS));
 
 		JScrollPane scrollPane = new JScrollPane();
 		panelList.add(scrollPane);
 
-		JList<String> list = new JList<String>();
+		Algorithm[] algorithms = Algorithm.values();
+		String[] algorithmNames = new String[algorithms.length];
+		
+		for(int i=0; i < algorithms.length; i++){
+			algorithmNames[i] = algorithms[i].getText();
+		}
+
+		DefaultComboBoxModel<String> algorithmModel = new DefaultComboBoxModel<String>(algorithmNames);
+		
+		JComboBox comboListAlgorithm = new JComboBox(algorithmModel);
+		comboListAlgorithm.setToolTipText("Select the algorithm to use when generating the list.");
+
+		list = new JList<Long>();
 		scrollPane.setViewportView(list);
 		list.setVisibleRowCount(10);
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
-		JButton btnGenerateList = new JButton("Generate list");
+		btnGenerateList = new JButton(generatePreMessage);
+		btnGenerateList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String currentlySelected = comboListAlgorithm.getSelectedItem().toString();
+				int amountToGenerate = 10;
+				Algorithm algorithm = Algorithm.fromString(currentlySelected);
+
+				if (algorithm != null) {
+
+					createListOfPrimes(amountToGenerate, algorithm);
+				}
+
+			}
+		});
 		panelList.add(btnGenerateList);
 
 		JLabel lblUsing = new JLabel(" using ");
 		panelList.add(lblUsing);
 
-		JComboBox comboListAlgorithm = new JComboBox();
-		comboListAlgorithm.setToolTipText("Select the algorithm to use when generating the list.");
 		panelList.add(comboListAlgorithm);
 
 		JLabel lblHeader3 = DefaultComponentFactory.getInstance().createTitle("Next Prime Generator");
+		lblHeader3.setAlignmentX(Component.CENTER_ALIGNMENT);
+		frame.getContentPane().add(lblHeader3);
 		lblHeader3.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblHeader3.setForeground(Color.DARK_GRAY);
-		panel.add(lblHeader3);
 
 		JPanel panel_4 = new JPanel();
-		panel.add(panel_4);
+		frame.getContentPane().add(panel_4);
+		panel_4.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel lblNextPrimeNumber = new JLabel("Next Prime Number");
 		panel_4.add(lblNextPrimeNumber);
@@ -206,11 +239,10 @@ public class CryptoApplication {
 				}
 
 				if (invalidInput == false) {
-					lblPrimeError.setVisible(false);
 					long nextPrime = PsuedoRandomUtility.generateNextPrimeNumber(inputLong);
 					textFieldNextPrimeOutput.setText(Long.toString(nextPrime));
 				} else {
-					lblPrimeError.setVisible(true);
+					textFieldNextPrimeOutput.setText("Invalid input! Must be a number");
 				}
 
 			}
@@ -218,55 +250,150 @@ public class CryptoApplication {
 		panel_4.add(btnGenerateNextPrime);
 
 		textFieldNextPrimeOutput = new JTextField();
+		textFieldNextPrimeOutput.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldNextPrimeOutput.setEditable(false);
 		panel_4.add(textFieldNextPrimeOutput);
 		textFieldNextPrimeOutput.setColumns(15);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setForeground(Color.RED);
-		panel.add(panel_1);
-		FlowLayout fl_panel_1 = new FlowLayout(FlowLayout.CENTER, 120, 5);
-		panel_1.setLayout(fl_panel_1);
-
-		lblPrimeError = new JLabel("Error! must be a number in the range 0 - 2147483647");
-		lblPrimeError.setForeground(Color.RED);
-		panel_1.add(lblPrimeError);
-
 		JLabel lblNewJgoodiesTitle = DefaultComponentFactory.getInstance().createTitle("Assignment Details  ");
+		lblNewJgoodiesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblNewJgoodiesTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(lblNewJgoodiesTitle);
 		lblNewJgoodiesTitle.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblNewJgoodiesTitle.setForeground(Color.DARK_GRAY);
-		panel.add(lblNewJgoodiesTitle);
 
 		JPanel panel_2 = new JPanel();
-		panel.add(panel_2);
+		frame.getContentPane().add(panel_2);
+		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JTextPane textPane = new JTextPane();
 		panel_2.add(textPane);
 		textPane.setText("Advanced Security Lab 5\r\n18/11/2015\r\n\r\nAlan Haverty\r\nC12410858\r\nDT211C4");
 		textPane.setFont(new Font("Tahoma", Font.PLAIN, 10));
+
+//		Algorithm[] algorithms = Algorithm.values();
+//		String[] algorithmNames = new String[algorithms.length];
+//
+//		for (int i = 0; i < algorithms.length; i++) {
+//			algorithmNames[i] = algorithms[i].getText();
+//		}
+//
+//		DefaultComboBoxModel<String> algorithmModel = new DefaultComboBoxModel<String>(algorithmNames);
 	}
 
-	public void setGeneratedNumberAndPrime(ActionEvent e) {
+	/**
+	 * Generate a random number and update the corresponding output text field
+	 * 
+	 * @param e
+	 */
+	private void setGeneratedNumberAndPrime(ActionEvent e) {
 		if (e.getSource() == btnGenerateNumber1) {
 			long generatedLong = PsuedoRandomUtility.generateNumberUsingMersenneTwister();
 			numberOutput1.setText(Long.toString(generatedLong));
 			textPrime1.setText(Boolean.toString(PsuedoRandomUtility.isPrime(generatedLong)));
 		}
 		if (e.getSource() == btnGenerateNumber2) {
-			long generatedLong = PsuedoRandomUtility.generateNumberUsingBlumBlumShub(); // TODO
-																						// fixup
-																						// blum
-																						// blum
-																						// algorithm
-																						// or
-																						// replace
-																						// with
-																						// a
-																						// different
-																						// one..
+			long generatedLong = PsuedoRandomUtility.generateNumberUsingBlumBlumShub();
+			// TODO fixup blum blum algorithm or replace with a different one..
 			numberOutput2.setText(Long.toString(generatedLong));
 			textPrime2.setText(Boolean.toString(PsuedoRandomUtility.isPrime(generatedLong)));
 		}
+	}
+
+	/**
+	 * Algorithm enum for the various types of algorithms
+	 * 
+	 * @author Alan
+	 *
+	 */
+	public enum Algorithm {
+		BLUM_BLUM_SHUB("Blum Blum Shub"), MERSENNE_TWISTER("Mersenne Twister");
+		private String text;
+
+		Algorithm(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return this.text;
+		}
+
+		public static Algorithm fromString(String text) {
+			if (text != null) {
+				for (Algorithm b : Algorithm.values()) {
+					if (text.equalsIgnoreCase(b.text)) {
+						return b;
+					}
+				}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * Generate a prime number using a specified algorithm
+	 * 
+	 * @param algorithm
+	 * @return A long prime number
+	 */
+	private long generatePrimeUsingAlgorithm(Algorithm algorithm) {
+		if (algorithm == Algorithm.BLUM_BLUM_SHUB) {
+			long randomNumber;
+			do {
+				randomNumber = PsuedoRandomUtility.generateNumberUsingBlumBlumShub();
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			return randomNumber;
+		} else if (algorithm == Algorithm.MERSENNE_TWISTER) {
+			long randomNumber;
+			do {
+				randomNumber = PsuedoRandomUtility.generateNumberUsingMersenneTwister();
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			return randomNumber;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Background task for generating prime numbers and updating the list and
+	 * buttons
+	 * 
+	 * @param amountToGenerate
+	 * @param algorithm
+	 * @author Alan
+	 */
+	private void createListOfPrimes(int amountToGenerate, Algorithm algorithm) {
+		SwingWorker<Boolean, Long[]> worker = new SwingWorker<Boolean, Long[]>() {
+			@Override
+			protected Boolean doInBackground() throws Exception {
+
+				btnGenerateList.setEnabled(false);
+				btnGenerateList.setText(generateDuringMessage);
+
+				Long[] primes = new Long[amountToGenerate];
+
+				for (int i = 0; i < amountToGenerate; i++) {
+					primes[i] = generatePrimeUsingAlgorithm(algorithm);
+					publish(primes);
+				}
+				return true;
+			}
+
+			protected void done() {
+				System.out.println("Completed creating list of primes.");
+				btnGenerateList.setEnabled(true);
+				btnGenerateList.setText(generatePreMessage);
+			}
+
+			@Override
+			protected void process(List<Long[]> chunks) {
+				Long[] mostRecentValue = chunks.get(chunks.size() - 1);
+				list.setListData(mostRecentValue);
+			}
+
+		};
+
+		worker.execute();
 	}
 
 }
