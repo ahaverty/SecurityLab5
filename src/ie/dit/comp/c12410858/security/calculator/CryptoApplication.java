@@ -27,6 +27,8 @@ import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import java.awt.BorderLayout;
+import javax.swing.JInternalFrame;
+import javax.swing.border.TitledBorder;
 
 public class CryptoApplication {
 
@@ -84,15 +86,15 @@ public class CryptoApplication {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
-		JLabel lblHeader1 = DefaultComponentFactory.getInstance().createTitle("Number Generators & Prime Tester");
-		lblHeader1.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblHeader1.setHorizontalAlignment(SwingConstants.LEFT);
-		frame.getContentPane().add(lblHeader1);
-		lblHeader1.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblHeader1.setForeground(Color.DARK_GRAY);
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Random Number Generators & Prime Tester", TitledBorder.LEFT,
+				TitledBorder.TOP, null, null));
+		frame.getContentPane().add(panel);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
 		JPanel panelGenerate1 = new JPanel();
-		frame.getContentPane().add(panelGenerate1);
+		panel.add(panelGenerate1);
+		panelGenerate1.setToolTipText("");
 
 		JLabel algorithmLabel1 = new JLabel("Mersenne Twister");
 		algorithmLabel1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -115,7 +117,7 @@ public class CryptoApplication {
 		textPrime1.setEditable(false);
 		textPrime1.setText("");
 		textPrime1.setColumns(10);
-		panelGenerate1.setLayout(new GridLayout(0, 5, 0, 0));
+		panelGenerate1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panelGenerate1.add(algorithmLabel1);
 		panelGenerate1.add(btnGenerateNumber1);
 		panelGenerate1.add(numberOutput1);
@@ -123,8 +125,8 @@ public class CryptoApplication {
 		panelGenerate1.add(textPrime1);
 
 		JPanel panelGenerate2 = new JPanel();
-		frame.getContentPane().add(panelGenerate2);
-		panelGenerate2.setLayout(new GridLayout(0, 5, 0, 0));
+		panel.add(panelGenerate2);
+		panelGenerate2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JLabel algorithmLabel2 = new JLabel("Blum Blum Shub");
 		algorithmLabel2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -153,28 +155,23 @@ public class CryptoApplication {
 		textPrime2.setColumns(10);
 		panelGenerate2.add(textPrime2);
 
-		JLabel lblHeader2 = DefaultComponentFactory.getInstance().createTitle("Large Prime Number List Generator");
-		lblHeader2.setAlignmentX(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(lblHeader2);
-		lblHeader2.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblHeader2.setForeground(Color.DARK_GRAY);
-
 		JPanel panelList = new JPanel();
+		panelList.setBorder(new TitledBorder(null, "Large Prime Number List Generator", TitledBorder.LEFT,
+				TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panelList);
-		panelList.setLayout(new BoxLayout(panelList, BoxLayout.X_AXIS));
+		panelList.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JScrollPane scrollPane = new JScrollPane();
 		panelList.add(scrollPane);
 
 		Algorithm[] algorithms = Algorithm.values();
 		String[] algorithmNames = new String[algorithms.length];
-		
-		for(int i=0; i < algorithms.length; i++){
+
+		for (int i = 0; i < algorithms.length; i++) {
 			algorithmNames[i] = algorithms[i].getText();
 		}
 
 		DefaultComboBoxModel<String> algorithmModel = new DefaultComboBoxModel<String>(algorithmNames);
-		
 		JComboBox comboListAlgorithm = new JComboBox(algorithmModel);
 		comboListAlgorithm.setToolTipText("Select the algorithm to use when generating the list.");
 
@@ -205,13 +202,9 @@ public class CryptoApplication {
 
 		panelList.add(comboListAlgorithm);
 
-		JLabel lblHeader3 = DefaultComponentFactory.getInstance().createTitle("Next Prime Generator");
-		lblHeader3.setAlignmentX(Component.CENTER_ALIGNMENT);
-		frame.getContentPane().add(lblHeader3);
-		lblHeader3.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblHeader3.setForeground(Color.DARK_GRAY);
-
 		JPanel panel_4 = new JPanel();
+		panel_4.setBorder(
+				new TitledBorder(null, "Next Prime Calculator", TitledBorder.LEFT, TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panel_4);
 		panel_4.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
@@ -255,30 +248,26 @@ public class CryptoApplication {
 		panel_4.add(textFieldNextPrimeOutput);
 		textFieldNextPrimeOutput.setColumns(15);
 
-		JLabel lblNewJgoodiesTitle = DefaultComponentFactory.getInstance().createTitle("Assignment Details  ");
-		lblNewJgoodiesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblNewJgoodiesTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblNewJgoodiesTitle);
-		lblNewJgoodiesTitle.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNewJgoodiesTitle.setForeground(Color.DARK_GRAY);
-
 		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Assignment & Student Details", TitledBorder.LEFT, TitledBorder.TOP,
+				null, null));
 		frame.getContentPane().add(panel_2);
-		panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.X_AXIS));
 
 		JTextPane textPane = new JTextPane();
 		panel_2.add(textPane);
 		textPane.setText("Advanced Security Lab 5\r\n18/11/2015\r\n\r\nAlan Haverty\r\nC12410858\r\nDT211C4");
 		textPane.setFont(new Font("Tahoma", Font.PLAIN, 10));
 
-//		Algorithm[] algorithms = Algorithm.values();
-//		String[] algorithmNames = new String[algorithms.length];
-//
-//		for (int i = 0; i < algorithms.length; i++) {
-//			algorithmNames[i] = algorithms[i].getText();
-//		}
-//
-//		DefaultComboBoxModel<String> algorithmModel = new DefaultComboBoxModel<String>(algorithmNames);
+		// Algorithm[] algorithms = Algorithm.values();
+		// String[] algorithmNames = new String[algorithms.length];
+		//
+		// for (int i = 0; i < algorithms.length; i++) {
+		// algorithmNames[i] = algorithms[i].getText();
+		// }
+		//
+		// DefaultComboBoxModel<String> algorithmModel = new
+		// DefaultComboBoxModel<String>(algorithmNames);
 	}
 
 	/**
