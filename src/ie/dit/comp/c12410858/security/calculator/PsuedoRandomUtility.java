@@ -3,7 +3,10 @@ package ie.dit.comp.c12410858.security.calculator;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Random;
+
+import org.apache.commons.math3.random.MersenneTwister;
 
 public class PsuedoRandomUtility {
 
@@ -17,9 +20,12 @@ public class PsuedoRandomUtility {
 			System.err.println("No such algorithm found");
 		}
 		
-		long generatedNumber = secureRandom.nextLong() & 0xffffffffL;
-		
-		return generatedNumber;
+		return secureRandom.nextLong() & 0xffffffffL;
+	}
+	
+	public static long generateNumberUsingMersenneTwister() {
+		MersenneTwister mt = new MersenneTwister();
+		return mt.nextLong() & 0xffffffffL;
 	}
 	
 	public static long generateNumberUsingBlumBlumShub() {
@@ -28,6 +34,12 @@ public class PsuedoRandomUtility {
 		//bbs.next(numBits)
 		//TODO!
 		return generatedNumber.longValue();
+	}
+	
+	public static long generateNextPrimeNumber(long primeNumber) {
+		while (!isPrime(++primeNumber)) 
+	    { }
+		return primeNumber;
 	}
 	
 	/**
