@@ -12,7 +12,6 @@ import javax.swing.JList;
 import javax.swing.border.BevelBorder;
 import java.awt.FlowLayout;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Color;
 import java.awt.Font;
@@ -20,12 +19,12 @@ import java.awt.Font;
 public class CryptoApplication {
 
 	private JFrame frame;
-	private JTextField txtPrimeChecker;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField txtPrime1;
+	private JTextField numberOutput1;
+	private JTextField numberOutput2;
+	private JTextField textPrime2;
+	private JTextField textFieldNextPrimeInput;
+	private JTextField textFieldNextPrimeOutput;
 
 	/**
 	 * Launch the application.
@@ -62,89 +61,89 @@ public class CryptoApplication {
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		JLabel lblNumberGenerators = DefaultComponentFactory.getInstance().createTitle("Number Generators & Prime Tester");
-		lblNumberGenerators.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNumberGenerators.setForeground(Color.DARK_GRAY);
-		panel.add(lblNumberGenerators);
+		JLabel lblHeader1 = DefaultComponentFactory.getInstance().createTitle("Number Generators & Prime Tester");
+		lblHeader1.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblHeader1.setForeground(Color.DARK_GRAY);
+		panel.add(lblHeader1);
 		
-		JPanel panel_1 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();
-		flowLayout.setHgap(10);
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel.add(panel_1);
+		JPanel panelGenerate1 = new JPanel();
+		FlowLayout fl_panelGenerate1 = (FlowLayout) panelGenerate1.getLayout();
+		fl_panelGenerate1.setHgap(10);
+		fl_panelGenerate1.setAlignment(FlowLayout.LEFT);
+		panel.add(panelGenerate1);
 		
-		JLabel lblAlgorithmLabel = new JLabel("Mersenne Twister");
-		panel_1.add(lblAlgorithmLabel);
+		JLabel algorithmLabel1 = new JLabel("Mersenne Twister");
+		panelGenerate1.add(algorithmLabel1);
 		
-		JButton btnGenerateNumber = new JButton("Generate number");
-		panel_1.add(btnGenerateNumber);
+		JButton btnGenerateNumber1 = new JButton("Generate number");
+		panelGenerate1.add(btnGenerateNumber1);
 		
-		textField = new JTextField();
-		textField.setEditable(false);
-		panel_1.add(textField);
-		textField.setColumns(15);
+		numberOutput1 = new JTextField();
+		numberOutput1.setEditable(false);
+		panelGenerate1.add(numberOutput1);
+		numberOutput1.setColumns(15);
 		
 		JLabel lblPrime = new JLabel("Prime:");
-		panel_1.add(lblPrime);
+		panelGenerate1.add(lblPrime);
 		
-		txtPrimeChecker = new JTextField();
-		txtPrimeChecker.setEditable(false);
-		panel_1.add(txtPrimeChecker);
-		txtPrimeChecker.setText("");
-		txtPrimeChecker.setColumns(10);
+		txtPrime1 = new JTextField();
+		txtPrime1.setEditable(false);
+		panelGenerate1.add(txtPrime1);
+		txtPrime1.setText("");
+		txtPrime1.setColumns(10);
 		
-		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panel_2.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
-		flowLayout_1.setHgap(10);
-		panel.add(panel_2);
+		JPanel panelGenerate2 = new JPanel();
+		FlowLayout fl_panelGenerate2 = (FlowLayout) panelGenerate2.getLayout();
+		fl_panelGenerate2.setAlignment(FlowLayout.LEFT);
+		fl_panelGenerate2.setHgap(10);
+		panel.add(panelGenerate2);
 		
-		JLabel lblBlumBlumShub = new JLabel("Blum Blum Shub");
-		panel_2.add(lblBlumBlumShub);
+		JLabel algorithmLabel2 = new JLabel("Blum Blum Shub");
+		panelGenerate2.add(algorithmLabel2);
 		
-		JButton button = new JButton("Generate number");
-		panel_2.add(button);
+		JButton btnGenerateNumber2 = new JButton("Generate number");
+		panelGenerate2.add(btnGenerateNumber2);
 		
-		textField_1 = new JTextField();
-		textField_1.setEditable(false);
-		textField_1.setColumns(15);
-		panel_2.add(textField_1);
+		numberOutput2 = new JTextField();
+		numberOutput2.setEditable(false);
+		numberOutput2.setColumns(15);
+		panelGenerate2.add(numberOutput2);
 		
 		JLabel label_1 = new JLabel("Prime:");
-		panel_2.add(label_1);
+		panelGenerate2.add(label_1);
 		
-		textField_2 = new JTextField();
-		textField_2.setText("");
-		textField_2.setEditable(false);
-		textField_2.setColumns(10);
-		panel_2.add(textField_2);
+		textPrime2 = new JTextField();
+		textPrime2.setText("");
+		textPrime2.setEditable(false);
+		textPrime2.setColumns(10);
+		panelGenerate2.add(textPrime2);
 		
-		JLabel lblLargePrimeNumber = DefaultComponentFactory.getInstance().createTitle("Large Prime Number List Generator");
-		lblLargePrimeNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblLargePrimeNumber.setForeground(Color.DARK_GRAY);
-		panel.add(lblLargePrimeNumber);
+		JLabel lblHeader2 = DefaultComponentFactory.getInstance().createTitle("Large Prime Number List Generator");
+		lblHeader2.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblHeader2.setForeground(Color.DARK_GRAY);
+		panel.add(lblHeader2);
 		
-		JPanel panel_3 = new JPanel();
-		panel.add(panel_3);
+		JPanel panelList = new JPanel();
+		panel.add(panelList);
 		
-		JLabel lblLargePrime = new JLabel("10 Large Prime Numbers:");
-		panel_3.add(lblLargePrime);
+		JLabel lblListLabel = new JLabel("10 Large Prime Numbers:");
+		panelList.add(lblListLabel);
 		
 		JButton btnGenerateList = new JButton("Generate list");
-		panel_3.add(btnGenerateList);
+		panelList.add(btnGenerateList);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		panel_3.add(scrollPane);
+		panelList.add(scrollPane);
 		
 		JList<String> list = new JList<String>();
 		scrollPane.setViewportView(list);
 		list.setVisibleRowCount(10);
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
-		JLabel lblNextPrimeGenerator = DefaultComponentFactory.getInstance().createTitle("Next Prime Generator");
-		lblNextPrimeGenerator.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNextPrimeGenerator.setForeground(Color.DARK_GRAY);
-		panel.add(lblNextPrimeGenerator);
+		JLabel lblHeader3 = DefaultComponentFactory.getInstance().createTitle("Next Prime Generator");
+		lblHeader3.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblHeader3.setForeground(Color.DARK_GRAY);
+		panel.add(lblHeader3);
 		
 		JPanel panel_4 = new JPanel();
 		panel.add(panel_4);
@@ -152,18 +151,18 @@ public class CryptoApplication {
 		JLabel lblNextPrimeNumber = new JLabel("Next Prime Number");
 		panel_4.add(lblNextPrimeNumber);
 		
-		textField_3 = new JTextField();
-		textField_3.setToolTipText("Enter a number");
-		textField_3.setColumns(15);
-		panel_4.add(textField_3);
+		textFieldNextPrimeInput = new JTextField();
+		textFieldNextPrimeInput.setToolTipText("Enter a number");
+		textFieldNextPrimeInput.setColumns(15);
+		panel_4.add(textFieldNextPrimeInput);
 		
 		JButton btnGenerateNextPrime = new JButton("Generate next prime number");
 		panel_4.add(btnGenerateNextPrime);
 		
-		textField_4 = new JTextField();
-		textField_4.setEditable(false);
-		panel_4.add(textField_4);
-		textField_4.setColumns(15);
+		textFieldNextPrimeOutput = new JTextField();
+		textFieldNextPrimeOutput.setEditable(false);
+		panel_4.add(textFieldNextPrimeOutput);
+		textFieldNextPrimeOutput.setColumns(15);
 	}
 
 }
