@@ -38,7 +38,8 @@ public class PsuedoRandomUtility {
 	
 	public static long generateNextPrimeNumber(long primeNumber) {
 		while (!isPrime(++primeNumber)) 
-	    { }
+	    { System.out.println("In while loop. " + primeNumber);}
+		System.out.println("Done....");
 		return primeNumber;
 	}
 	
