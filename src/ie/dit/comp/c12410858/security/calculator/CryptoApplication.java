@@ -13,21 +13,15 @@ import javax.swing.JList;
 import javax.swing.border.BevelBorder;
 import java.awt.FlowLayout;
 import javax.swing.JScrollPane;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
-import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
-import java.awt.Component;
-import java.awt.BorderLayout;
-import javax.swing.JInternalFrame;
 import javax.swing.border.TitledBorder;
 
 public class CryptoApplication {
@@ -55,7 +49,6 @@ public class CryptoApplication {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					// Set the Look and Feel to that of system
 					try {
 						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					} catch (Exception ignore) {
@@ -128,7 +121,7 @@ public class CryptoApplication {
 		panel.add(panelGenerate2);
 		panelGenerate2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JLabel algorithmLabel2 = new JLabel("Blum Blum Shub");
+		JLabel algorithmLabel2 = new JLabel("LCG");
 		algorithmLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		panelGenerate2.add(algorithmLabel2);
 
@@ -282,8 +275,7 @@ public class CryptoApplication {
 			textPrime1.setText(Boolean.toString(PsuedoRandomUtility.isPrime(generatedLong)));
 		}
 		if (e.getSource() == btnGenerateNumber2) {
-			long generatedLong = PsuedoRandomUtility.generateNumberUsingBlumBlumShub();
-			// TODO fixup blum blum algorithm or replace with a different one..
+			long generatedLong = PsuedoRandomUtility.generateNumberUsingLcg();
 			numberOutput2.setText(Long.toString(generatedLong));
 			textPrime2.setText(Boolean.toString(PsuedoRandomUtility.isPrime(generatedLong)));
 		}
@@ -296,7 +288,8 @@ public class CryptoApplication {
 	 *
 	 */
 	public enum Algorithm {
-		BLUM_BLUM_SHUB("Blum Blum Shub"), MERSENNE_TWISTER("Mersenne Twister");
+		MERSENNE_TWISTER("Mersenne Twister"), LCG("LCG"), SHA1("SHA1PRNG"), WINDOWS(
+				"Windows-PRNG");
 		private String text;
 
 		Algorithm(String text) {
@@ -326,16 +319,22 @@ public class CryptoApplication {
 	 * @return A long prime number
 	 */
 	private long generatePrimeUsingAlgorithm(Algorithm algorithm) {
-		if (algorithm == Algorithm.BLUM_BLUM_SHUB) {
-			long randomNumber;
-			do {
-				randomNumber = PsuedoRandomUtility.generateNumberUsingBlumBlumShub();
-			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
-			return randomNumber;
-		} else if (algorithm == Algorithm.MERSENNE_TWISTER) {
+		if (algorithm == Algorithm.MERSENNE_TWISTER) {
 			long randomNumber;
 			do {
 				randomNumber = PsuedoRandomUtility.generateNumberUsingMersenneTwister();
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			return randomNumber;
+		} else if (algorithm == Algorithm.LCG) {
+			long randomNumber;
+			do {
+				randomNumber = PsuedoRandomUtility.generateNumberUsingLcg();
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			return randomNumber;
+		} else if (algorithm == Algorithm.SHA1 || algorithm == Algorithm.WINDOWS) {
+			long randomNumber;
+			do {
+				randomNumber = PsuedoRandomUtility.generateNumber(algorithm.getText());
 			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
 			return randomNumber;
 		} else {

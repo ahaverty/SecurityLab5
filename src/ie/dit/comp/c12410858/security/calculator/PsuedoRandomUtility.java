@@ -28,12 +28,27 @@ public class PsuedoRandomUtility {
 		return mt.nextLong() & 0xffffffffL;
 	}
 	
+	public static long generateNumberUsingLcg() {
+		// Use the parameters from Java's LCG RNG
+		final BigInteger A = BigInteger.valueOf(25214903917L);
+		final BigInteger B = BigInteger.valueOf(11);
+		final BigInteger M = BigInteger.ONE.shiftLeft(48);  // 2^48
+		
+		// Choose seed and create LCG RNG
+		int random = new Random().nextInt();
+		BigInteger seed = BigInteger.valueOf(System.currentTimeMillis() + random);
+		LcgRandom randSlow = new LcgRandom(A, B, M, seed);
+		
+		return randSlow.getState() & 0xffffffffL;
+	}
+	
 	public static long generateNumberUsingBlumBlumShub() {
-		BigInteger generatedNumber = BlumBlumShub.generateN(32, new Random());
-		BlumBlumShub bbs = new BlumBlumShub(generatedNumber);
-		//bbs.next(numBits)
-		//TODO!
-		return generatedNumber.longValue();
+		double p = new Random().nextDouble();
+		double q = new Random().nextDouble();
+		double seed = new Random().nextDouble();
+		BlumBlumShub bbs = new BlumBlumShub(p,q,seed);
+		
+		return (long) bbs.getRandom();
 	}
 	
 	public static long generateNextPrimeNumber(long primeNumber) {
