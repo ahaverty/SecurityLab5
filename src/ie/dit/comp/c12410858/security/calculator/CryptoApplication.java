@@ -73,6 +73,7 @@ public class CryptoApplication {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 649, 572);
@@ -165,6 +166,7 @@ public class CryptoApplication {
 		}
 
 		DefaultComboBoxModel<String> algorithmModel = new DefaultComboBoxModel<String>(algorithmNames);
+		@SuppressWarnings("rawtypes")
 		JComboBox comboListAlgorithm = new JComboBox(algorithmModel);
 		comboListAlgorithm.setToolTipText("Select the algorithm to use when generating the list.");
 
@@ -251,16 +253,6 @@ public class CryptoApplication {
 		panel_2.add(textPane);
 		textPane.setText("Advanced Security Lab 5\r\n18/11/2015\r\n\r\nAlan Haverty\r\nC12410858\r\nDT211C4");
 		textPane.setFont(new Font("Tahoma", Font.PLAIN, 10));
-
-		// Algorithm[] algorithms = Algorithm.values();
-		// String[] algorithmNames = new String[algorithms.length];
-		//
-		// for (int i = 0; i < algorithms.length; i++) {
-		// algorithmNames[i] = algorithms[i].getText();
-		// }
-		//
-		// DefaultComboBoxModel<String> algorithmModel = new
-		// DefaultComboBoxModel<String>(algorithmNames);
 	}
 
 	/**
@@ -288,8 +280,7 @@ public class CryptoApplication {
 	 *
 	 */
 	public enum Algorithm {
-		MERSENNE_TWISTER("Mersenne Twister"), LCG("LCG"), SHA1("SHA1PRNG"), WINDOWS(
-				"Windows-PRNG");
+		MERSENNE_TWISTER("Mersenne Twister"), LCG("LCG"), SHA1("SHA1PRNG"), WINDOWS("Windows-PRNG");
 		private String text;
 
 		Algorithm(String text) {

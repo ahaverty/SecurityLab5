@@ -32,7 +32,7 @@ public class LcgRandom {
 		this.x = seed;
 	}
 
-	public long getState() {
+	public long getLong() {
 		return x.longValue();
 	}
 
