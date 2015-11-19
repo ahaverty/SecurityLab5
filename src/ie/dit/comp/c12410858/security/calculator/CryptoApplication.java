@@ -29,6 +29,7 @@ public class CryptoApplication {
 	private static String appTitle = "Lab 5 Number Generator";
 	private String generatePreMessage = "Generate list";
 	private String generateDuringMessage = "Generating list...";
+	private int amountToGenerate = 10;
 
 	private JFrame frame;
 	private JTextField numberOutput1;
@@ -43,7 +44,37 @@ public class CryptoApplication {
 	private JList<Long> list;
 
 	/**
-	 * Launch the application.
+	 * Algorithm enum for the various types of algorithms
+	 * 
+	 * @author Alan
+	 *
+	 */
+	public enum Algorithm {
+		MERSENNE_TWISTER("Mersenne Twister"), LCG("LCG"), SHA1("SHA1PRNG"), WINDOWS("Windows-PRNG");
+		private String text;
+
+		Algorithm(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return this.text;
+		}
+
+		public static Algorithm fromString(String text) {
+			if (text != null) {
+				for (Algorithm b : Algorithm.values()) {
+					if (text.equalsIgnoreCase(b.text)) {
+						return b;
+					}
+				}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * Launch the gui application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -76,7 +107,7 @@ public class CryptoApplication {
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 649, 572);
+		frame.setBounds(100, 100, 650, 570);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -180,7 +211,7 @@ public class CryptoApplication {
 			public void actionPerformed(ActionEvent e) {
 
 				String currentlySelected = comboListAlgorithm.getSelectedItem().toString();
-				int amountToGenerate = 10;
+
 				Algorithm algorithm = Algorithm.fromString(currentlySelected);
 
 				if (algorithm != null) {
@@ -214,6 +245,7 @@ public class CryptoApplication {
 		JButton btnGenerateNextPrime = new JButton("Generate next prime number");
 		btnGenerateNextPrime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				boolean invalidInput = false;
 				long inputLong = 0;
 				String inputNextPrimeText = textFieldNextPrimeInput.getText();
@@ -256,11 +288,14 @@ public class CryptoApplication {
 	}
 
 	/**
-	 * Generate a random number and update the corresponding output text field
+	 * Generate a random number and update the corresponding output text field.
 	 * 
 	 * @param e
 	 */
 	private void setGeneratedNumberAndPrime(ActionEvent e) {
+
+		// Depending on the button clicked, generate a random number and update
+		// the text field
 		if (e.getSource() == btnGenerateNumber1) {
 			long generatedLong = PsuedoRandomUtility.generateNumberUsingMersenneTwister();
 			numberOutput1.setText(Long.toString(generatedLong));
@@ -274,40 +309,10 @@ public class CryptoApplication {
 	}
 
 	/**
-	 * Algorithm enum for the various types of algorithms
-	 * 
-	 * @author Alan
-	 *
-	 */
-	public enum Algorithm {
-		MERSENNE_TWISTER("Mersenne Twister"), LCG("LCG"), SHA1("SHA1PRNG"), WINDOWS("Windows-PRNG");
-		private String text;
-
-		Algorithm(String text) {
-			this.text = text;
-		}
-
-		public String getText() {
-			return this.text;
-		}
-
-		public static Algorithm fromString(String text) {
-			if (text != null) {
-				for (Algorithm b : Algorithm.values()) {
-					if (text.equalsIgnoreCase(b.text)) {
-						return b;
-					}
-				}
-			}
-			return null;
-		}
-	}
-
-	/**
 	 * Generate a prime number using a specified algorithm
 	 * 
 	 * @param algorithm
-	 * @return A long prime number
+	 * @return A long prime number or 0 if the algorithm was not found
 	 */
 	private long generatePrimeUsingAlgorithm(Algorithm algorithm) {
 		if (algorithm == Algorithm.MERSENNE_TWISTER) {
@@ -346,12 +351,15 @@ public class CryptoApplication {
 			@Override
 			protected Boolean doInBackground() throws Exception {
 
+				// Disable the button and set the text to show that the list is
+				// being generated
 				btnGenerateList.setEnabled(false);
 				btnGenerateList.setText(generateDuringMessage);
 
 				Long[] primes = new Long[amountToGenerate];
 
 				for (int i = 0; i < amountToGenerate; i++) {
+					//Generate a random prime and publish it to the list
 					primes[i] = generatePrimeUsingAlgorithm(algorithm);
 					publish(primes);
 				}
@@ -359,6 +367,8 @@ public class CryptoApplication {
 			}
 
 			protected void done() {
+				// After completion, set the generate button to enabled and
+				// change the text back
 				System.out.println("Completed creating list of primes.");
 				btnGenerateList.setEnabled(true);
 				btnGenerateList.setText(generatePreMessage);
@@ -366,6 +376,7 @@ public class CryptoApplication {
 
 			@Override
 			protected void process(List<Long[]> chunks) {
+				// Publish the list of primes each time
 				Long[] mostRecentValue = chunks.get(chunks.size() - 1);
 				list.setListData(mostRecentValue);
 			}
