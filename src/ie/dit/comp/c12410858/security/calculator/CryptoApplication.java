@@ -109,7 +109,7 @@ public class CryptoApplication {
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 650, 570);
+		frame.setBounds(100, 100, 700, 570);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
