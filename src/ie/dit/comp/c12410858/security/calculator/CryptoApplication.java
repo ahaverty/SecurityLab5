@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
+import javax.swing.JToggleButton;
 
 public class CryptoApplication {
 
@@ -42,6 +43,7 @@ public class CryptoApplication {
 	private JButton btnGenerateNumber2;
 	JButton btnGenerateList;
 	private JList<Long> list;
+	private JToggleButton tglbtnPrimesOnly;
 
 	/**
 	 * Algorithm enum for the various types of algorithms
@@ -215,8 +217,8 @@ public class CryptoApplication {
 				Algorithm algorithm = Algorithm.fromString(currentlySelected);
 
 				if (algorithm != null) {
-
-					createListOfPrimes(amountToGenerate, algorithm);
+					boolean primesOnly = tglbtnPrimesOnly.isSelected();
+					createListOfNumbers(amountToGenerate, algorithm, primesOnly);
 				}
 
 			}
@@ -227,6 +229,10 @@ public class CryptoApplication {
 		panelList.add(lblUsing);
 
 		panelList.add(comboListAlgorithm);
+		
+		tglbtnPrimesOnly = new JToggleButton("Primes only");
+		tglbtnPrimesOnly.setSelected(true);
+		panelList.add(tglbtnPrimesOnly);
 
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(
@@ -309,29 +315,30 @@ public class CryptoApplication {
 	}
 
 	/**
-	 * Generate a prime number using a specified algorithm
+	 * Generate a number using a specified algorithm
 	 * 
-	 * @param algorithm
-	 * @return A long prime number or 0 if the algorithm was not found
+	 * @param algorithm The algorithm to use when generating the number
+	 * @param primesOnly Generates Prime numbers only if set to True
+	 * @return A long number or 0 if the algorithm was not found
 	 */
-	private long generatePrimeUsingAlgorithm(Algorithm algorithm) {
+	private long generateNumberUsingAlgorithm(Algorithm algorithm, boolean primesOnly) {
 		if (algorithm == Algorithm.MERSENNE_TWISTER) {
 			long randomNumber;
 			do {
 				randomNumber = PsuedoRandomUtility.generateNumberUsingMersenneTwister();
-			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false && primesOnly == true);
 			return randomNumber;
 		} else if (algorithm == Algorithm.LCG) {
 			long randomNumber;
 			do {
 				randomNumber = PsuedoRandomUtility.generateNumberUsingLcg();
-			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false && primesOnly == true);
 			return randomNumber;
 		} else if (algorithm == Algorithm.SHA1 || algorithm == Algorithm.WINDOWS) {
 			long randomNumber;
 			do {
 				randomNumber = PsuedoRandomUtility.generateNumber(algorithm.getText());
-			} while (PsuedoRandomUtility.isPrime(randomNumber) == false);
+			} while (PsuedoRandomUtility.isPrime(randomNumber) == false && primesOnly == true);
 			return randomNumber;
 		} else {
 			return 0;
@@ -346,7 +353,7 @@ public class CryptoApplication {
 	 * @param algorithm
 	 * @author Alan
 	 */
-	private void createListOfPrimes(int amountToGenerate, Algorithm algorithm) {
+	private void createListOfNumbers(int amountToGenerate, Algorithm algorithm, boolean primesOnly) {
 		SwingWorker<Boolean, Long[]> worker = new SwingWorker<Boolean, Long[]>() {
 			@Override
 			protected Boolean doInBackground() throws Exception {
@@ -356,12 +363,12 @@ public class CryptoApplication {
 				btnGenerateList.setEnabled(false);
 				btnGenerateList.setText(generateDuringMessage);
 
-				Long[] primes = new Long[amountToGenerate];
+				Long[] numbers = new Long[amountToGenerate];
 
 				for (int i = 0; i < amountToGenerate; i++) {
-					//Generate a random prime and publish it to the list
-					primes[i] = generatePrimeUsingAlgorithm(algorithm);
-					publish(primes);
+					//Generate a random number and publish it to the list
+					numbers[i] = generateNumberUsingAlgorithm(algorithm, primesOnly);
+					publish(numbers);
 				}
 				return true;
 			}
@@ -369,7 +376,7 @@ public class CryptoApplication {
 			protected void done() {
 				// After completion, set the generate button to enabled and
 				// change the text back
-				System.out.println("Completed creating list of primes.");
+				System.out.println("Completed creating list of numbers.");
 				btnGenerateList.setEnabled(true);
 				btnGenerateList.setText(generatePreMessage);
 			}
